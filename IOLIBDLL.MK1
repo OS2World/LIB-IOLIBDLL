@@ -1,0 +1,26 @@
+!define BLANK ""
+d:\wiolib\wiolib.obj : d:\wiolib\wiolib.asm .AUTODEPEND
+ @d:
+ cd d:\wiolib
+ *wasm wiolib.asm -i=D:\WATCOM\h;$(%toolkit)\c\os2h -mf -5r -w4 -e25 -zq
+
+d:\wiolib\iolibdll.obj : d:\wiolib\iolibdll.c .AUTODEPEND
+ @d:
+ cd d:\wiolib
+ *wcc386 iolibdll.c -i=D:\WATCOM\h;D:\WATCOM\h\os2 -w4 -e25 -zq -otexan -d2 &
+-bd -mf -5s -bt=os2
+
+d:\wiolib\iolibdll.dll : d:\wiolib\wiolib.obj d:\wiolib\iolibdll.obj d:\wiol&
+ib\iolibdll.def .AUTODEPEND
+ @d:
+ cd d:\wiolib
+ @%write iolibdll.lk1 NAME iolibdll
+ @%append iolibdll.lk1 FIL wiolib.obj,iolibdll.obj
+ @%append iolibdll.lk1 
+ *wlink SYS os2v2 dll op m d all op st=8192 op c op maxe=25 op q op symf op &
+one @iolibdll.lk1
+!ifneq BLANK ""
+ rc -i $[: -i D:\WATCOM\h -i D:\WATCOM\h\os2  iolibdll.dll
+!endif
+ wlib -n -b iolibdll.lib +iolibdll.dll
+
